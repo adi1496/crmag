@@ -4,4 +4,4 @@ CRMag is web app platform created with Node.js, Express, mongoDB, mongoose and o
 
 ### TODO
 
-- [ ] Setup Server
+- [x] Setup Server
