@@ -1,0 +1,27 @@
+{
+  "name": "crmag",
+  "version": "1.0.0",
+  "description": "CRMag is web app platform created with Node.js, Express, mongoDB, mongoose and other frieds of those.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adi1496/crmag.git"
+  },
+  "author": "Adrian Matei",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/adi1496/crmag/issues"
+  },
+  "homepage": "https://github.com/adi1496/crmag#readme",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.3"
+  }
+}
