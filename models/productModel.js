@@ -3,8 +3,13 @@ const mongoose = require('mongoose');
 const productSchema = new mongoose.Schema({
   name: {
     type: String,
+    unique: [true, 'The product name must be unique'],
     trim: true,
     required: [true, 'A product must have a name'],
+  },
+  slug: {
+    type: String,
+    lowercase: true,
   },
   price: {
     type: String,
@@ -38,6 +43,7 @@ const productSchema = new mongoose.Schema({
 productSchema.pre('save', function (next) {
   if (this.isNew) {
     this.createdAt = Date.now();
+    this.slug = this.name.split(' ').join('-');
   }
 
   next();

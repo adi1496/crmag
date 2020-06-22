@@ -4,8 +4,8 @@
   "description": "CRMag is web app platform created with Node.js, Express, mongoDB, mongoose and other frieds of those.",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon server.js"
+    "start": "nodemon server.js",
+    "start:prod": "cross-env NODE_ENV=production nodemon server.js"
   },
   "repository": {
     "type": "git",
@@ -18,10 +18,16 @@
   },
   "homepage": "https://github.com/adi1496/crmag#readme",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cross-env": "^7.0.2",
+    "crypto-js": "^4.0.0",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.9.15",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "nodemailer": "^6.4.8",
+    "validator": "^13.0.0"
   },
   "devDependencies": {
     "eslint": "^7.0.0",

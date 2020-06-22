@@ -9,17 +9,18 @@ CRMag is web app platform created with Node.js, Express, mongoDB, mongoose and o
 - [x] Setup connection to Database
 - [ ] Create the routes and controllers for:
   ### TODO
-  - [ ] Product
-  - [ ] Users
+  - [x] Product
+  - [x] Users
+  - [x] Auth controller
   - [ ] Reviews
   - [ ] Orders
-- [ ] Create the models
+- [ ] Create the models for:
   ### TODO
-  - [ ] Products
-  - [ ] Users
+  - [x] Products
+  - [x] Users
   - [ ] Reviews
   - [ ] Orders
-- [ ] Errors handler controller and the App Error Class
+- [x] Errors handler controller and the App Error Class
 - [ ] Authentication, Authorisation and Security
 - [ ] Rendering, or Frontend Application to consum the API
 - [ ] Advanced Features
