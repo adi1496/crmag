@@ -8,19 +8,22 @@ const myAlgos = require('./../utils/myalgos');
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: true,
+    required: true
   },
   email: {
     type: String,
     required: true,
     unique: true,
-    validate: [validator.isEmail, 'This is not an valid email address, please provide an valide addreess'],
+    validate: [
+      validator.isEmail,
+      'This is not an valid email address, please provide an valide addreess'
+    ]
   },
   password: {
     type: String,
     required: true,
     minlength: [8, 'The password must contain minimum 8 characters'],
-    select: false,
+    select: false
   },
   confirmPassword: {
     type: String,
@@ -29,26 +32,27 @@ const userSchema = new mongoose.Schema({
       validator: function (thisElement) {
         return thisElement === this.password;
       },
-      message: 'Passwords are not the same!',
+      message: 'Passwords are not the same!'
     },
-    select: false,
+    select: false
   },
   role: {
     type: String,
     enum: ['user', 'admin', 'support', 'sales'],
-    default: 'user',
+    default: 'user'
   },
   passwordChangedAt: Date,
   passwordResetToken: String,
-  passwordResetTokenExpiresIn: Date,
+  passwordResetTokenExpiresIn: Date
 });
 
 userSchema.pre('save', async function (next) {
-  if (!this.isModified('password')) return next();
+  if (!this.isModified('password') || this.isNew) return next();
 
   this.password = await bcrypt.hash(this.password, 12);
 
   this.confirmPassword = undefined;
+  this.passwordChangedAt = Date.now() - 1000;
 
   next();
 });
@@ -58,7 +62,7 @@ userSchema.methods.correctPassword = async function (candidatePassword, userPass
   return await bcrypt.compare(candidatePassword, userPassword);
 };
 
-userSchema.methods.creaetPasswordResetToken = function () {
+userSchema.methods.createPasswordResetToken = function () {
   const randomBytes = myAlgos.createRandomChars(40);
   const resetToken = crypto.SHA256(randomBytes).toString();
 
@@ -66,6 +70,14 @@ userSchema.methods.creaetPasswordResetToken = function () {
   this.passwordResetTokenExpiresIn = Date.now() + 10 * 60 * 1000;
 
   return resetToken;
+};
+
+userSchema.methods.resetPassword = function (password, confirmPassword) {
+  this.password = password;
+  this.confirmPassword = confirmPassword;
+
+  this.passwordResetToken = undefined;
+  this.passwordResetTokenExpiresIn = undefined;
 };
 
 const User = mongoose.model('User', userSchema);
