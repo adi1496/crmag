@@ -54,12 +54,12 @@ exports.login = catchAsync(async (req, res, next) => {
 });
 
 exports.protect = catchAsync(async (req, res, next) => {
+  if(!req.headers.authorization) return next(new AppError('You are not logged in. Please log in to have access', 401));
   let token = req.headers.authorization;
   if (token.startsWith('Bearer')) token = token.split(' ')[1];
 
   if (!token) return next(new AppError('You are not loged in. Please log in to have access', 401));
 
-  const decoded = await jwt.verify(token, process.env.JWT_SECRET);
 
   const user = await User.findById(decoded.id);
   if (!user) return next(new AppError('This user no longer exists', 401));
