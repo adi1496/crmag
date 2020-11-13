@@ -13,8 +13,6 @@ const createSendMail = async (message, email) => {
       }
     });
 
-    console.log('aici e bine');
-
     await transporter.sendMail({
       from: process.env.MAIL_SENDER,
       to: email,

@@ -56,6 +56,8 @@ exports.login = catchAsync(async (req, res, next) => {
   });
 });
 
+/********************* Protect + User's permissions ****************/
+
 exports.protect = catchAsync(async (req, res, next) => {
   if (!req.headers.authorization)
     return next(new AppError('You are not logged in. Please log in to have access', 401));
@@ -84,6 +86,18 @@ exports.protect = catchAsync(async (req, res, next) => {
   //FINISH THE JOB HERE
 });
 
+exports.restrictTo = (roles) => {
+  return async (req, res, next) => {
+    if (!roles.includes(req.user.role)) {
+      return next(new AppError("Sorry, you don't have rights to access this", 401));
+    }
+
+    next();
+  };
+};
+
+/************************* Forgot password + Reset Password *****************/
+
 exports.forgotPassword = catchAsync(async (req, res, next) => {
   const user = await User.findOne({ email: req.body.email });
   if (!user) return next(new AppError('There is no user with this email address', 400));
@@ -92,8 +106,7 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   await user.save({ runValidators: true });
   const message = `This is your password reset token valid for only 10 minutes: ${resetToken}\n Hurry up and change the password!`;
 
-  // await createSendMail(message, req.body.email);
-
+  await createSendMail(message, req.body.email);
   res.status(200).json({
     status: 'success',
     resetToken
@@ -104,12 +117,15 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
   if (req.body.password !== req.body.confirmPassword)
     return next(new AppError('Passwords are not the same! Please try again', 400));
 
+  if (!req.params.token)
+    return next(new AppError('Invalid token. Please try again with a vaild token', 401));
+
   const user = await User.findOne({ passwordResetToken: req.params.token });
   if (!user)
     return next(
       new AppError(
         "Didn't find any user with this token. Please provide a valid one",
-        400
+        404
       )
     );
 
@@ -146,6 +162,21 @@ exports.updateMyPassword = catchAsync(async (req, res, next) => {
     message: 'Password updated successfully',
     data: {
       token
+    }
+  });
+});
+
+exports.updateMe = catchAsync(async (req, res, next) => {
+  if (req.body.password) delete req.body.password;
+  if (req.body.confirmPassword) delete req.body.confirmPassword;
+  if (req.body.role) delete req.body.role;
+
+  await User.findByIdAndUpdate(req.user._id, req.body, { runValidators: true });
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      message: 'Data updated successfully'
     }
   });
 });

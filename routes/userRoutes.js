@@ -2,8 +2,7 @@ const express = require('express');
 
 const userController = require('./../controllers/userController');
 const authController = require('./../controllers/authController');
-
-router = express.Router();
+const router = express.Router();
 
 router.route('/signup').post(authController.signup);
 router.route('/login').post(authController.login);
@@ -13,6 +12,10 @@ router.route('/resetPassword/:token').patch(authController.resetPassword);
 router
   .route('/updateMyPassword')
   .patch(authController.protect, authController.updateMyPassword);
+
+router.route('/updateMe').patch(authController.protect, authController.updateMe);
+
+router.use(authController.protect, authController.restrictTo(['admin']));
 
 router.route('/').get(userController.getAllUsers).post(userController.createUser);
 

@@ -5,11 +5,20 @@ const authController = require('./../controllers/authController');
 
 const router = express.Router();
 
-router.route('/').get(productController.getAllProducts).post(authController.protect, productController.createProduct);
+router
+  .route('/')
+  .get(productController.getAllProducts)
+  .post(
+    authController.protect,
+    authController.restrictTo(['admin']),
+    productController.createProduct
+  );
 
+router.get('/:id', productController.getProductById);
+
+router.use(authController.protect, authController.restrictTo(['admin']));
 router
   .route('/:id')
-  .get(productController.getProductById)
   .patch(productController.updateProduct)
   .delete(productController.deleteProduct);
 
