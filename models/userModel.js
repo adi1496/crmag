@@ -38,6 +38,12 @@ const userSchema = new mongoose.Schema({
     enum: ['user', 'admin', 'support', 'sales-agent'],
     default: 'user',
   },
+  wishlist: [
+    {
+      type: mongoose.Schema.ObjectId,
+      ref: 'Product',
+    },
+  ],
   passwordChangedAt: Date,
   passwordResetToken: String,
   passwordResetTokenExpiresIn: Date,

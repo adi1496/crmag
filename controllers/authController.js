@@ -7,7 +7,7 @@ const createSendMail = require('./../utils/email');
 
 const createJWT = (id) => {
   token = jwt.sign({ id }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRES_IN
+    expiresIn: process.env.JWT_EXPIRES_IN,
   });
 
   return token;
@@ -18,11 +18,10 @@ exports.signup = catchAsync(async (req, res, next) => {
     name: req.body.name,
     email: req.body.email,
     password: req.body.password,
-    confirmPassword: req.body.confirmPassword
+    confirmPassword: req.body.confirmPassword,
   });
 
-  if (!newUser)
-    return next(new AppError('The user was not created. Please try again!', 400));
+  if (!newUser) return next(new AppError('The user was not created. Please try again!', 400));
 
   const token = createJWT(newUser._id);
 
@@ -31,14 +30,13 @@ exports.signup = catchAsync(async (req, res, next) => {
     status: 'success',
     data: {
       user: newUser,
-      token
-    }
+      token,
+    },
   });
 });
 
 exports.login = catchAsync(async (req, res, next) => {
-  if (!req.body.password || !req.body.email)
-    return next(new AppError('Please provide the email and password', 400));
+  if (!req.body.password || !req.body.email) return next(new AppError('Please provide the email and password', 400));
 
   const user = await User.findOne({ email: req.body.email }).select('+password');
 
@@ -51,22 +49,20 @@ exports.login = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: 'success',
     data: {
-      token
-    }
+      token,
+    },
   });
 });
 
 /********************* Protect + User's permissions ****************/
 
 exports.protect = catchAsync(async (req, res, next) => {
-  if (!req.headers.authorization)
-    return next(new AppError('You are not logged in. Please log in to have access', 401));
+  if (!req.headers.authorization) return next(new AppError('You are not logged in. Please log in to have access', 401));
 
   let token = req.headers.authorization;
   if (token.startsWith('Bearer')) token = token.split(' ')[1];
 
-  if (!token)
-    return next(new AppError('You are not loged in. Please log in to have access', 401));
+  if (!token) return next(new AppError('You are not loged in. Please log in to have access', 401));
 
   const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
@@ -75,9 +71,7 @@ exports.protect = catchAsync(async (req, res, next) => {
   const passwordChangedAtTS = parseInt(user.passwordChangedAt.getTime() / 1000, 10);
 
   if (decoded.iat < passwordChangedAtTS)
-    return next(
-      new AppError('The password was changed recently. Please login again!', 401)
-    );
+    return next(new AppError('The password was changed recently. Please login again!', 401));
   if (decoded.exp < parseInt(Date.now() / 1000, 10))
     return next(new AppError('Your JWT has expired. Please login again!', 401));
 
@@ -109,7 +103,7 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   await createSendMail(message, req.body.email);
   res.status(200).json({
     status: 'success',
-    resetToken
+    resetToken,
   });
 });
 
@@ -117,17 +111,10 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
   if (req.body.password !== req.body.confirmPassword)
     return next(new AppError('Passwords are not the same! Please try again', 400));
 
-  if (!req.params.token)
-    return next(new AppError('Invalid token. Please try again with a vaild token', 401));
+  if (!req.params.token) return next(new AppError('Invalid token. Please try again with a vaild token', 401));
 
   const user = await User.findOne({ passwordResetToken: req.params.token });
-  if (!user)
-    return next(
-      new AppError(
-        "Didn't find any user with this token. Please provide a valid one",
-        404
-      )
-    );
+  if (!user) return next(new AppError("Didn't find any user with this token. Please provide a valid one", 404));
 
   if (Date.now() < user.passwordResetTokenExpiresIn) {
     user.resetPassword(req.body.password, req.body.confirmPassword);
@@ -138,7 +125,7 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
 
   res.status(200).json({
     status: 'success',
-    message: 'The password was sucessfully changed!'
+    message: 'The password was sucessfully changed!',
   });
 });
 
@@ -152,17 +139,14 @@ exports.updateMyPassword = catchAsync(async (req, res, next) => {
   await user.save({ runValidators: true });
 
   const token = createJWT(user._id);
-  if (!token)
-    return next(
-      new AppError('Password was updated, but login failed. Please login again', 500)
-    );
+  if (!token) return next(new AppError('Password was updated, but login failed. Please login again', 500));
 
   res.status(200).json({
     status: 'success',
     message: 'Password updated successfully',
     data: {
-      token
-    }
+      token,
+    },
   });
 });
 
@@ -170,13 +154,14 @@ exports.updateMe = catchAsync(async (req, res, next) => {
   if (req.body.password) delete req.body.password;
   if (req.body.confirmPassword) delete req.body.confirmPassword;
   if (req.body.role) delete req.body.role;
+  if (req.body.wishlist) delete req.body.wishlist;
 
   await User.findByIdAndUpdate(req.user._id, req.body, { runValidators: true });
 
   res.status(200).json({
     status: 'success',
     data: {
-      message: 'Data updated successfully'
-    }
+      message: 'Data updated successfully',
+    },
   });
 });
