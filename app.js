@@ -3,7 +3,7 @@
 // 3rd-party modules
 const express = require('express');
 const morgan = require('morgan');
-// const ejs = require('ejs');
+const cors = require('cors');
 
 // Own modules
 const productRoutes = require('./routes/productRoutes');
@@ -11,6 +11,8 @@ const userRoutes = require('./routes/userRoutes');
 const globalErrorHandler = require('./controllers/errorController');
 
 const app = express();
+
+app.use(cors());
 
 app.use(morgan('dev'));
 app.use(express.json());
