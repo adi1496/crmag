@@ -1,0 +1,10 @@
+
+Database error: Sat Nov 14 2020 16:27:58 GMT+0200 (Eastern European Standard Time)
+Category phone not equal with the number of products belong to this category. Somebody deleted products manually in the database!!!!! 
+ category-items: 1 vs products-count: 0
+Database error: Sat Nov 14 2020 16:32:09 GMT+0200 (Eastern European Standard Time)
+Category phone not equal with the number of products belong to this category. Somebody deleted products manually in the database!!!!! 
+ category-items: 1 vs products-count: 0
+Database error: Sat Nov 14 2020 16:35:12 GMT+0200 (Eastern European Standard Time)
+Category "phone" not equal with the number of products belong to this category. Somebody deleted products manually in the database!!!!! 
+ category-items: 1 vs products-count: 0

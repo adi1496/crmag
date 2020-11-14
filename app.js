@@ -6,7 +6,6 @@ const morgan = require('morgan');
 // const ejs = require('ejs');
 
 // Own modules
-const viewRoutes = require('./routes/viewRoutes');
 const productRoutes = require('./routes/productRoutes');
 const userRoutes = require('./routes/userRoutes');
 const globalErrorHandler = require('./controllers/errorController');
@@ -22,7 +21,7 @@ app.use('/api/v1/users', userRoutes);
 app.use('*', (req, res, next) => {
   res.status(404).json({
     status: 'fail',
-    message: `This route doesn't exists`
+    message: `This route doesn't exists`,
   });
 });
 app.use(globalErrorHandler);

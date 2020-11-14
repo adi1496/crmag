@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 
+const getSetCategory = require('../utils/get-set-category-data');
+
 const productSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -16,9 +18,9 @@ const productSchema = new mongoose.Schema({
     required: [true, 'A product must have a price'],
   },
   category: {
-    type: String,
+    type: mongoose.Schema.ObjectId,
+    ref: 'Category',
     required: [true, 'A product must belong to a category'],
-    enum: ['phone', 'tv', 'laptop', 'pc-components', 'tablet', 'gaming-console'],
   },
   summary: {
     type: String,
@@ -34,6 +36,10 @@ const productSchema = new mongoose.Schema({
   },
   ratingsQuantity: {
     type: Number,
+  },
+  secretProduct: {
+    type: Boolean,
+    default: false,
   },
   imageCover: String,
   images: [String],

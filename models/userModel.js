@@ -8,22 +8,19 @@ const myAlgos = require('./../utils/myalgos');
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: true
+    required: true,
   },
   email: {
     type: String,
     required: true,
     unique: true,
-    validate: [
-      validator.isEmail,
-      'This is not an valid email address, please provide an valide addreess'
-    ]
+    validate: [validator.isEmail, 'This is not an valid email address, please provide an valide addreess'],
   },
   password: {
     type: String,
     required: true,
     minlength: [8, 'The password must contain minimum 8 characters'],
-    select: false
+    select: false,
   },
   confirmPassword: {
     type: String,
@@ -32,22 +29,22 @@ const userSchema = new mongoose.Schema({
       validator: function (thisElement) {
         return thisElement === this.password;
       },
-      message: 'Passwords are not the same!'
+      message: 'Passwords are not the same!',
     },
-    select: false
+    select: false,
   },
   role: {
     type: String,
     enum: ['user', 'admin', 'support', 'sales-agent'],
-    default: 'user'
+    default: 'user',
   },
   passwordChangedAt: Date,
   passwordResetToken: String,
-  passwordResetTokenExpiresIn: Date
+  passwordResetTokenExpiresIn: Date,
 });
 
 userSchema.pre('save', async function (next) {
-  if (!this.isModified('password') || this.isNew) return next();
+  if (!this.isModified('password') || !this.isNew) return next();
 
   this.password = await bcrypt.hash(this.password, 12);
 

@@ -3,10 +3,19 @@ const mongoose = require('mongoose');
 
 const app = require('./app');
 
-dotenv.config({ path: './.config.env' });
+const backgroundJobs = require('./utils/background-jobs');
 
+dotenv.config({
+  path: './.config.env',
+});
+
+// const database = process.env.DATABASE.replace('<password>', process.env.DATABASE_PASSWORD).replace(
+//   '<dbname>',
+//   process.env.DATABASE_NAME
+// );
+const testdb = process.env.DATABASE_LOCAL;
 mongoose
-  .connect(process.env.DATABASE, {
+  .connect(testdb, {
     useNewUrlParser: true,
     useCreateIndex: true,
     useFindAndModify: false,
@@ -21,3 +30,5 @@ const server = app.listen(port, () => {
   console.log(`The app is listening on port ${port}...`);
   console.log(process.env.NODE_ENV);
 });
+
+setInterval(backgroundJobs.updateCategoryItemsCount, parseInt(process.env.CATEGORY_UPDATES_INTERVAL) * 60 * 60 * 1000);
