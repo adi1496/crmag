@@ -23,15 +23,16 @@ exports.signup = catchAsync(async (req, res, next) => {
 
   if (!newUser) return next(new AppError('The user was not created. Please try again!', 400));
 
-  const token = createJWT(newUser._id);
+  // const token = createJWT(newUser._id);
 
   newUser.password = undefined;
   res.status(201).json({
     status: 'success',
-    data: {
-      user: newUser,
-      token,
-    },
+    message: 'Your account has been created. You can now login'
+    // data: {
+    //   user: newUser,
+    //   token,
+    // },
   });
 });
 
@@ -49,6 +50,12 @@ exports.login = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: 'success',
     data: {
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        wishlist: user.wishlist
+      },
       token,
     },
   });
@@ -103,7 +110,8 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   await createSendMail(message, req.body.email);
   res.status(200).json({
     status: 'success',
-    resetToken,
+    message: 'Please check your e-mail in order to reset the password'
+    // resetToken,
   });
 });
 
@@ -165,3 +173,15 @@ exports.updateMe = catchAsync(async (req, res, next) => {
     },
   });
 });
+
+exports.amILogged = catchAsync(async(req, res, next) => {
+  res.status(200).json({
+    status: 'success',
+    user: {
+      id: req.user._id,
+      name: req.user.name,
+      email: req.user.email,
+      wishlist: req.user.wishlist
+    }
+  })
+})

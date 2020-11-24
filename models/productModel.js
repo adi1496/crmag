@@ -29,6 +29,11 @@ const productSchema = new mongoose.Schema({
   description: {
     type: String,
   },
+  characteristics: [
+    {
+      type: Array,
+    }
+  ],
   ratingsAverage: {
     type: Number,
     min: [1, 'The rating average must be minimum 1'],
@@ -36,6 +41,7 @@ const productSchema = new mongoose.Schema({
   },
   ratingsQuantity: {
     type: Number,
+    default: 0
   },
   secretProduct: {
     type: Boolean,
@@ -49,7 +55,7 @@ const productSchema = new mongoose.Schema({
 productSchema.pre('save', function (next) {
   if (this.isNew) {
     this.createdAt = Date.now();
-    this.slug = this.name.split(' ').join('-');
+    this.slug = this.summary.split(' ').join('-');
   }
 
   next();
