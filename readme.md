@@ -2,6 +2,15 @@
 
 CRMag is web app platform created with Node.js, Express, mongoDB, mongoose and other frieds of those.
 
+Credits: 
+MongoDB Atlas: https://www.mongodb.com/cloud/atlas
+JSON Web Token: https://jwt.io/
+Mongoose: https://mongoosejs.com/
+MailTrap: https://mailtrap.io/
+SendGrid: https://sendgrid.com/solutions/email-api/
+BcryptJS: https://www.npmjs.com/package/bcryptjs
+Heroku: https://www.heroku.com/
+
 ### TODO
 
 - [x] Setup Server
